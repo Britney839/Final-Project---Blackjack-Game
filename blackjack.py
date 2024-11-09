@@ -25,7 +25,7 @@ def bet_amount():
     while True:
         try:
             bet_amount = float(input("Bet amount: "))
-            if bet_amount < 5 or bet_amount > money or bet_amount < 1000:
+            if bet_amount < 5 or bet_amount > money or bet_amount > 1000:
                 print("Bet has to be higher than 5 and less than 1000 or your current amount of money.")
             else:
                 return bet_amount
@@ -75,7 +75,33 @@ def points(player_hand, dealer_hand):
     dealer_value = calculate_hand_value(dealer_hand)
 
     return player_value, dealer_value
-        
+
+#checks all possible win or lose or tie scenario and outputs based off score.
+def winner(player_value, dealer_value, money, bet):
+    
+    if dealer_value > 21:
+        print(f'\nYOUR POINTS:   {player_value}')
+        print(f"DEALER'S POINTS {dealer_value}")
+        print("\nDealer busts! You win.")
+        money += bet
+                   
+    if player_value > dealer_value and player_value < 21:
+        print(f'\nYOUR POINTS:   {player_value}')
+        print(f"DEALER'S POINTS {dealer_value}")
+        print("\nYou Win!")
+        money += bet
+                    
+    elif player_value < dealer_value and dealer_value <= 21:
+        print(f'\nYOUR POINTS:   {player_value}')
+        print(f"DEALER'S POINTS {dealer_value}")
+        print("\nSorry, you lose.")
+        money -= bet
+                    
+    elif player_value == dealer_value:
+        print(f'\nYOUR POINTS:   {player_value}')
+        print(f"DEALER'S POINTS {dealer_value}")
+        print("\nIt's a tie!")
+    return money       
 
 def main():
     money = db.read_money_amount()
@@ -128,32 +154,8 @@ def main():
                     _, dealer_value = points(player_hand, dealer_hand)
                     dealer_hands(cards, dealer_hand)
                     break
-
-
-        #checks all possible win or lose or tie scenario and outputs based off score.             
-        if dealer_value > 21:
-            print(f'\nYOUR POINTS:   {player_value}')
-            print(f"DEALER'S POINTS {dealer_value}")
-            print("\nDealer busts! You win.")
-            money += bet
-                   
-        
-        if player_value > dealer_value and player_value < 21:
-            print(f'\nYOUR POINTS:   {player_value}')
-            print(f"DEALER'S POINTS {dealer_value}")
-            print("\n You Win!")
-            money += bet
-                    
-        elif player_value < dealer_value and dealer_value <= 21:
-            print(f'\nYOUR POINTS:   {player_value}')
-            print(f"DEALER'S POINTS {dealer_value}")
-            print("\nSorry, you lose.")
-            money -= bet
-                    
-        elif player_value == dealer_value:
-            print(f'\nYOUR POINTS:   {player_value}')
-            print(f"DEALER'S POINTS {dealer_value}")
-            print("\nIt's a tie!")
+             
+        winner(player_value, dealer_value, money, bet)
         print(f"Money: {money}")     
         
         #asks user if they want to play again
